@@ -1,5 +1,6 @@
 package reflection;
 
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,12 +14,14 @@ public class TestSerializer {
 
     private static Robot robot;
     private static String robotStr;
+    private static String robotJson;
 
     @BeforeClass
     public static void beforeClass() {
         String[] commands = {"sing","dance","clean"};
-        robot = new Robot(1, "DDRW2", 10000.0, commands, new Cat());
-
+        Cat cat = new Cat ("Vasia");
+        robot = new Robot(1, "DDRW2", 10000.0, commands, cat);
+        robotJson = GsonSerializer.convertObjectToJson(robot);
         robotStr = String.format("{\"id\":%s,\"model\":\"%s\",\"price\":%s,\"commands\":%s}",
                 robot.getId(),
                 robot.getModel(),
@@ -29,7 +32,7 @@ public class TestSerializer {
     @Test
     public void _01testObjectToJSON() {
         String res = serializer.convertObjectToJSON(robot);
-        Assert.assertEquals(robotStr, res);
+        Assert.assertEquals(robotJson, res);
     }
 
     @Test

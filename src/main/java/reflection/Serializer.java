@@ -21,24 +21,24 @@ public class Serializer {
 }
      */
 
-    public String convertObjectToJSON(Object object){
+    public String convertObjectToJSON(Object object) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         Class cl = object.getClass();
 
         Field[] fields = cl.getDeclaredFields();
 
-        for (Field f:fields) {
+        for (Field f : fields) {
             String fieldName = f.getName();
             String firstUpperCaseLetter = fieldName.substring(0, 1).toUpperCase();
             sb.append(addQuotes(fieldName)).append(":");
             try {
-                Method getFieldValue = cl.getMethod("get"+firstUpperCaseLetter+fieldName.substring(1));
-                if (f.getType().isArray()){
-                    sb.append(arrayToString((Object[])getFieldValue.invoke(object)));
-                }
-                else if (!f.getType().isPrimitive() && ! (String.class == f.getType()))sb.append(convertObjectToJSON(getFieldValue.invoke(object)));
-                else sb.append(getFieldValue.invoke(object));
+                Method getFieldValue = cl.getMethod("get" + firstUpperCaseLetter + fieldName.substring(1));
+                if (f.getType().isArray()) {
+                    sb.append(arrayToString((Object[]) getFieldValue.invoke(object)));
+                } else if (!f.getType().isPrimitive() && !(String.class == f.getType()))
+                    sb.append(convertObjectToJSON(getFieldValue.invoke(object)));
+                else sb.append(addQuotes(getFieldValue.invoke(object)));
                 sb.append(",");
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -48,28 +48,29 @@ public class Serializer {
                 e.printStackTrace();
             }
         }
-        return sb.substring(0,sb.length()-1)+"}";
+        return sb.substring(0, sb.length() - 1) + "}";
     }
 
-    public Object convertJSONToObject(String json){
+    public Object convertJSONToObject(String json) {
         return null;
     }
 
-    private static String deleteQuotes(String value){
-        return value.replace("\"","");
+    private static String deleteQuotes(String value) {
+        return value.replace("\"", "");
     }
 
     private static String addQuotes(Object value) {
+        if (value == null) return "";
         if (String.class == value.getClass())
-            return "\""+value+"\"";
+            return "\"" + value + "\"";
         else return value.toString();
     }
 
-    private static String arrayToString(Object[] objects){
+    private static String arrayToString(Object[] objects) {
         String result = "[";
-        for (Object o:objects){
-            result += addQuotes(o.toString())+", ";
+        for (Object o : objects) {
+            result += addQuotes(o.toString()) + ",";
         }
-        return result.substring(0,result.length()-2)+"]";
+        return result.substring(0, result.length() - 1) + "]";
     }
 }
