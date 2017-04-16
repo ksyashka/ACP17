@@ -13,20 +13,19 @@ public class TestSerializer {
 
 
     private static Robot robot;
-    private static String robotStr;
+    private static String robotSimpleJson;
     private static String robotJson;
+
+    private static RobotSimple robotSimple;
 
     @BeforeClass
     public static void beforeClass() {
-        String[] commands = {"sing","dance","clean"};
-        Cat cat = new Cat ("Vasia");
+        String[] commands = {"sing", "dance", "clean"};
+        Cat cat = new Cat("Vasia");
         robot = new Robot(1, "DDRW2", 10000.0, commands, cat);
         robotJson = GsonSerializer.convertObjectToJson(robot);
-        robotStr = String.format("{\"id\":%s,\"model\":\"%s\",\"price\":%s,\"commands\":%s}",
-                robot.getId(),
-                robot.getModel(),
-                robot.getPrice(),
-                Arrays.toString(robot.getCommands()));
+        robotSimple = new RobotSimple(2, "DDRW2", 2000.20);
+        robotSimpleJson = GsonSerializer.convertObjectToJson(robotSimple);
     }
 
     @Test
@@ -37,8 +36,8 @@ public class TestSerializer {
 
     @Test
     public void _02testJSONTOObject() {
-        Object obj = serializer.convertJSONToObject(robotStr);
-        Assert.assertEquals(robot, obj);
+        Object obj = serializer.convertJSONToObject(robotSimpleJson, RobotSimple.class);
+        Assert.assertEquals(robotSimple, obj);
     }
 
 
