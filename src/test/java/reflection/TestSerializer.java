@@ -1,11 +1,8 @@
 package reflection;
 
-import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 public class TestSerializer {
 
@@ -13,10 +10,11 @@ public class TestSerializer {
 
 
     private static Robot robot;
-    private static String robotSimpleJson;
     private static String robotJson;
 
     private static RobotSimple robotSimple;
+    private static String robotSimpleJson;
+
 
     @BeforeClass
     public static void beforeClass() {
@@ -24,7 +22,7 @@ public class TestSerializer {
         Cat cat = new Cat("Vasia");
         robot = new Robot(1, "DDRW2", 10000.0, commands, cat);
         robotJson = GsonSerializer.convertObjectToJson(robot);
-        robotSimple = new RobotSimple(2, "DDRW2", 2000.20);
+        robotSimple = new RobotSimple(1, "DDRW2", 10000.0, commands);
         robotSimpleJson = GsonSerializer.convertObjectToJson(robotSimple);
     }
 

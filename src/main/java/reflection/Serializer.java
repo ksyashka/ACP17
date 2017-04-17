@@ -3,14 +3,13 @@ package reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Serializer {
 
     /*
-{"id":1,"model":"R2D2","price":10000,"commands":["sing","dance","clean"]}
+{"id":1,"model":"R2D2","price":10000,"commands":["sing","dance","clean"],"cat":{"name":"Vasia"}}
      */
 
     public String convertObjectToJSON(Object object) {
@@ -42,17 +41,24 @@ public class Serializer {
         return sb.substring(0, sb.length() - 1) + "}";
     }
 
-    //{"id":1,"model":"DDRW2","price":10000.0}
-    // "commands":["sing","dance","clean"],"cat":{"name":"Vasia"}}
+
     public Object convertJSONToObject(String json, Class cl) {
+        Field[] fields = cl.getDeclaredFields();
+
         json = json.substring(1, json.length() - 1);
         String[] lines = json.split(",");
+
         Map<String, String> keyValuesMap = new HashMap<String, String>();
+        String previousKeyValue = null;
         for (int i = 0; i < lines.length; i++) {
             String[] keyValue = lines[i].split(":");
-            keyValuesMap.put(deleteQuotes(keyValue[0]), deleteQuotes(keyValue[1]));
+            if (keyValue.length == 1) keyValuesMap.put(previousKeyValue,
+                    (keyValuesMap.get(previousKeyValue) + "," + deleteQuotes(keyValue[0])));
+            else if (keyValue.length == 2) {
+                keyValuesMap.put(deleteQuotes(keyValue[0]), deleteQuotes(keyValue[1]));
+                previousKeyValue = deleteQuotes(keyValue[0]);
+            }
         }
-
         try {
             Object instance = cl.newInstance();
 
@@ -66,6 +72,8 @@ public class Serializer {
                     setMethod.invoke(instance, Integer.parseInt(keyValuesMap.get(key)));
                 } else if (double.class == fieldType || Double.class == fieldType) {
                     setMethod.invoke(instance, Double.parseDouble(keyValuesMap.get(key)));
+                } else if (fieldType.isArray()) {
+                    setMethod.invoke(instance, (Object) stringToArray(keyValuesMap.get(key)));
                 }
             }
             return instance;
@@ -83,6 +91,11 @@ public class Serializer {
         return null;
     }
 
+
+    private static Object[] stringToArray(String str) {
+        return str.substring(1, str.length() - 1).split(",");
+
+    }
 
     private static String deleteQuotes(String value) {
         return value.replace("\"", "");

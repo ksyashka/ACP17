@@ -1,5 +1,6 @@
 package reflection;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Robot {
@@ -71,20 +72,43 @@ public class Robot {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
 
-        Robot robot = (Robot) o;
+        Robot robot = (Robot) object;
 
-        return id == robot.id;
+        if (id != robot.id) return false;
+        if (Double.compare(robot.price, price) != 0) return false;
+        if (model != null ? !model.equals(robot.model) : robot.model != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(commands, robot.commands)) return false;
+        return cat != null ? cat.equals(robot.cat) : robot.cat == null;
 
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (model != null ? model.hashCode() : 0);
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + Arrays.hashCode(commands);
+        result = 31 * result + (cat != null ? cat.hashCode() : 0);
+        return result;
     }
 
+    @Override
+    public String toString() {
+        return "Robot{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", price=" + price +
+                ", commands=" + Arrays.toString(commands) +
+                ", cat=" + cat +
+                '}';
+    }
 }
 
