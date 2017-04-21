@@ -11,7 +11,7 @@ import java.util.List;
 public class _02ThreadJoin {
 
     public static void main(String[] args) {
-        File folder = new File("C:\\Users\\Yuriy\\IdeaProjects\\ACP17\\");
+        File folder = new File("C:\\Users\\Yuriy\\IdeaProjects\\ACP17");
         File[] files = folder.listFiles();
 
         List<Thread> threads = new ArrayList<>();
@@ -20,7 +20,7 @@ public class _02ThreadJoin {
 
         for (File file : files) {
             if (file.isDirectory()) {
-                AsynchFileSearchTask task = new AsynchFileSearchTask(file, "git");
+                AsynchFileSearchTask task = new AsynchFileSearchTask(file, ".java");
                 Thread thread = new Thread(task);
                 threads.add(thread);
                 tasks.add(task);
@@ -35,9 +35,9 @@ public class _02ThreadJoin {
                 e.printStackTrace();
             }
         }
+
         for (AsynchFileSearchTask task : tasks) {
-            List<File> result = task.getRes();
-            result.addAll(result);
+            results.addAll(task.getRes());
 
         }
 
@@ -64,21 +64,23 @@ class AsynchFileSearchTask implements Runnable {
     }
 
     private void recSearch(File dir) {
-        System.out.println(dir.getName());
-        if (dir == null)
+
+        if (dir == null) {
             return;
+        }
         File[] files = dir.listFiles();
-        if (files == null || dir.listFiles() == null) {
+        if (files == null || files.length == 0) {
             return;
         }
 
+
+
         Arrays.stream(files)
                 .forEach((file) -> {
-                    if (file.isDirectory()){
+                    if (file.isDirectory()) {
                         recSearch(file);
-                    }
-                    else if (file.getName().contains(keyWord)){
-                            searchResult.add(file);
+                    } else if (file.getName().contains(keyWord)) {
+                        searchResult.add(file);
                     }
                 });
     }
