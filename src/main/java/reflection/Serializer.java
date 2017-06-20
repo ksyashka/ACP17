@@ -4,7 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class Serializer {
 
@@ -41,14 +43,15 @@ public class Serializer {
         return sb.substring(0, sb.length() - 1) + "}";
     }
 
-
+    /*
+{"id":1,"model":"R2D2","price":10000,"commands":["sing","dance","clean"],"cat":{"name":"Vasia"}}
+     */
     public Object convertJSONToObject(String json, Class cl) {
-        Field[] fields = cl.getDeclaredFields();
 
         json = json.substring(1, json.length() - 1);
         String[] lines = json.split(",");
 
-        Map<String, String> keyValuesMap = new HashMap<String, String>();
+        Map<String, String> keyValuesMap = new HashMap<>();
         String previousKeyValue = null;
         for (int i = 0; i < lines.length; i++) {
             String[] keyValue = lines[i].split(":");
@@ -118,5 +121,22 @@ public class Serializer {
 
     private String stringWithFirstUpperCaseLetter(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    private List<String> findClasses(String json){
+        Stack<Integer> stack = new Stack();
+        int first, last;
+        for (int i = 0; i< json.length(); i++){
+            if(json.charAt(i)=='{')
+                stack.push(i);
+            if(json.charAt(i)=='}')
+                if (stack.size()>1) stack.peek();
+                if (stack.size()==1) {
+                    last=i; first = stack.peek();
+                }
+        }
+        //String jsonWithoutClasses = json.substring();
+
+        return null;
     }
 }
