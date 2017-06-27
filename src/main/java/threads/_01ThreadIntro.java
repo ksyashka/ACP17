@@ -1,8 +1,5 @@
 package threads;
 
-/**
- * Created by Yuriy on 21.04.2017.
- */
 public class _01ThreadIntro {
 
     public static void main(String[] args) {
