@@ -1,6 +1,17 @@
 package testtask.cachemap;
 
-public class CacheMapImpl implements CacheMap {
+import java.util.Map;
+
+public class CacheMapImpl<KeyType, ValueType> implements CacheMap<KeyType, ValueType> {
+
+    public static final int DEFAULT_TABLE_SIZE = 16;
+
+    static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    final float loadFactor = DEFAULT_LOAD_FACTOR;
+
+    MyNode<KeyType, ValueType>[] table = new MyNode[DEFAULT_TABLE_SIZE];
+    int size;
+
     @Override
     public void setTimeToLive(long timeToLive) {
 
@@ -54,5 +65,34 @@ public class CacheMapImpl implements CacheMap {
     @Override
     public int size() {
         return 0;
+    }
+
+    private static class MyNode<NK, NV> implements Map.Entry<NK, NV> {
+        NK key;
+        NV value;
+        MyNode<NK, NV> next;
+
+        public MyNode(NK key, NV value, MyNode<NK, NV> next) {
+            this.key = key;
+            this.value = value;
+            this.next = next;
+        }
+
+        @Override
+        public NK getKey() {
+            return key;
+        }
+
+        @Override
+        public NV getValue() {
+            return value;
+        }
+
+        @Override
+        public NV setValue(NV value) {
+            NV old = this.value;
+            this.value = value;
+            return old;
+        }
     }
 }
