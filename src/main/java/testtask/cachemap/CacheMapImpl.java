@@ -1,6 +1,9 @@
 package testtask.cachemap;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
+import java.util.HashMap;
 import java.util.Map;
+
 
 public class CacheMapImpl<KeyType, ValueType> implements CacheMap<KeyType, ValueType> {
 
@@ -12,21 +15,44 @@ public class CacheMapImpl<KeyType, ValueType> implements CacheMap<KeyType, Value
     MyNode<KeyType, ValueType>[] table = new MyNode[DEFAULT_TABLE_SIZE];
     int size;
 
+    long TimeToLive;
+
+    public CacheMapImpl(long timeToLive) {
+        TimeToLive = timeToLive;
+    }
+
     @Override
     public void setTimeToLive(long timeToLive) {
-
+        TimeToLive = timeToLive;
     }
 
     @Override
     public long getTimeToLive() {
-        return 0;
+        return TimeToLive;
     }
 
     @Override
-    public Object put(Object key, Object value) {
+    public ValueType put(KeyType key, ValueType value) {
+
+        int position = getPosition(key);
+
+        if (table[position] == null)
+            table[position] = new MyNode<KeyType, ValueType>(key, value, null);
+        else {
+            MyNode<KeyType, ValueType> iter = table[position];
+            do {
+                if (iter.key.equals(key)) {
+                    ValueType oldValue = iter.value;
+                    iter.value = value;
+                    return oldValue;
+                }
+            } while (iter.next != null);
+            iter.next = new MyNode<KeyType, ValueType>(key, value, null);
+        }
+        size++;
         return null;
     }
-
+//TODO method
     @Override
     public void clearExpired() {
 
@@ -34,37 +60,59 @@ public class CacheMapImpl<KeyType, ValueType> implements CacheMap<KeyType, Value
 
     @Override
     public void clear() {
+        if (!isEmpty()) {
+            for (int i = 0; i < table.length; i++)
+                table[i] = null;
+            size = 0;
+        }
 
     }
 
     @Override
     public boolean containsKey(Object key) {
-        return false;
+        int position = getPosition(key);
+        return table[position].key == key;
     }
 
     @Override
     public boolean containsValue(Object value) {
+        if (!isEmpty()) {
+            for (int i = 0; i < table.length; i++) {
+                if(value.equals(table[i].value)) return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public Object get(Object key) {
+    public ValueType get(Object key) {
+        int position = getPosition(key);
+        if (table[position]!=null) return table[position].value;
         return null;
+    }
+
+    private int getPosition(Object key) {
+        int hash = Math.abs(key.hashCode());
+        return hash % table.length;
+    }
+
+    @Override
+    public ValueType remove(Object key) {
+        int position = getPosition(key);
+        ValueType returnValue = table[position].value;
+        table[position] = null;
+        return returnValue;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
-    @Override
-    public Object remove(Object key) {
-        return null;
-    }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     private static class MyNode<NK, NV> implements Map.Entry<NK, NV> {

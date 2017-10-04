@@ -1,4 +1,4 @@
-
+package testtask.cachemap;
 /**
  * Provides a way to override the system time.
  * Useful for unit-testing purposes.

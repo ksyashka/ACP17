@@ -1,4 +1,8 @@
+package testtask.cachemap;
 import junit.framework.TestCase;
+import testtask.cachemap.CacheMap;
+
+
 
 /**
  * JUnit test case for a CacheMap implementation.
