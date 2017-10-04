@@ -1,13 +1,14 @@
+package testtask.refactor;
 
 public class PhoneNumber {
-	private Num number;
+	private String number;
 
 	public PhoneNumber(String number) {
-		this.number = new Num(number);
+		this.number = number;
 	}
 
 	public String getNumber() {
-		return number.getNumber();
+		return number;
 	}
 	
 }

@@ -1,20 +1,30 @@
+package testtask.refactor;
 import java.util.Date;
 
 public class Person {
-	private String NAME;
+	private String name;
 	private PhoneNumber phoneNumber;
 	private Date date;
+
+	public Person(String name, PhoneNumber phoneNumber, Date date) {
+
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.date = date;
+	}
 	
 	public Person(String name, PhoneNumber phoneNumber) {
-		this.NAME = name;
+
+		this.name = name;
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getName() {
-		return NAME;
+		return name;
 	}
 
 	public void setName(String name) {
-		name = name;
+		this.name = name;
 	}
 
 	public PhoneNumber getPhoneNumber() {
@@ -25,4 +35,11 @@ public class Person {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }

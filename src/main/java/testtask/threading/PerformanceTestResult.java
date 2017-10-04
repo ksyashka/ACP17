@@ -1,4 +1,4 @@
-
+package testtask.threading;
 /**
  * Stores the result of a performance test.
  * All values are in milliseconds.

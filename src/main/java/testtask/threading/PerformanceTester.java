@@ -1,4 +1,4 @@
-
+package testtask.threading;
 public interface PerformanceTester {
 	
 	/**
