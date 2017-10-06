@@ -1,6 +1,8 @@
 package testtask.cyber;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class TestTask {
     static String sumString(String a, String b) {
@@ -49,9 +51,9 @@ public class TestTask {
     }
 
     static int fibonacci(int n) {
-        if (n==0) return 0;
-        if (n==1) return 1;
-        return fibonacci(n-2)+fibonacci(n-1);
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        return fibonacci(n - 2) + fibonacci(n - 1);
     }
 
     static void printSum(int[] a, int sum) {
@@ -69,6 +71,17 @@ public class TestTask {
                 if (j >= n - 1 && print > 1) print--;
             }
             System.out.println();
+        }
+
+    }
+
+    static void printRepeatWord(String string) {
+        //Вывести 5 самых повторяющихся слов в String
+        String[] split = string.split(" ");
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String s:split) {
+            if (map.containsKey(s)) map.put(s, map.get(s) + 1);
+            else map.put(s, 1);
         }
 
     }
