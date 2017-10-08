@@ -3,6 +3,7 @@ package testtask.cyber;
 import java.util.Arrays;
 import java.util.HashMap;
 
+
 public class TestTaskRun {
     public static void main(String[] args) {
 //        System.out.println(TestTask.sumString("110","11"));
@@ -10,10 +11,6 @@ public class TestTaskRun {
 //        TestTask.showRandom(5);//       TestTask.order(5,2,1,9,34,-5);
 //        TestTask.printMatrix(3);
  //       System.out.println(TestTask.fibonacci(6));
-
-        int[] array = new int[10];
-        System.out.println(Arrays.asList(array).size());
-
 
 
     }
